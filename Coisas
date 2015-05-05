@@ -1,0 +1,204 @@
+/* Estruturas */
+
+/* cheque */
+typedef struct {
+
+	long int valor;		
+
+	long int refe;
+
+	long int refb;
+	
+	long int refc;	
+	
+}	cheque;
+
+/* cliente */
+typedef struct {
+
+	long int ref
+
+	int nche;		
+
+	int nchb;
+
+	long int vche;
+	
+	long int vchb;	
+	
+}	cliente;
+
+
+
+/* comando_cheque 
+	
+	Executado apos receber o comando "cheque" no input.
+	Recebe ponteiros do valor e das tres referencias associadas a um cheque e devolve um ponteiro para o novo cheque
+
+*/
+
+cheque* comando_cheque(long int* valor_dado, long int* refemissor, long int* refbeneficiario, long int* refcheque) {
+	
+	cheque* novo_cheque;
+	
+	novo_cheque = (cheque*) malloc(sizeof(cheque));
+
+	novo_cheque->valor = *valor_dado;
+
+	novo_cheque->refe = *refemissor;
+
+	novo_cheque->refb = *refbeneficiario;
+
+	novo_cheque->refc = *refcheque;
+
+	ajusta_emissor(refemissor, valor_dado);
+
+	ajusta_beneficiario(refbeneficiario,  valor_dado);
+
+	return novo_cheque;
+
+}
+
+/* ajusta_emissor vai alterar os valores associados ao emissor dado, caso ele nao exista cria-o.
+ 
+	recebe ponteiros da referencia do emissor e do valor do cheque
+
+*/
+
+ajusta_emissor(long int* refemissor, long int* valor_dado) {
+
+	if (/*emissor nao existe na estrutura de dados*/) {
+
+		cliente* emissor;
+
+		cliente emissor = (cliente*) malloc(sizeof(cliente));
+
+		emissor->ref = refemissor;
+
+		emissor->nche = 1;
+
+		emissor->vche = *valor_dado;
+
+	}
+
+	else {
+
+		emissor = seek_cliente(refemissor);
+
+		(emissor->nche)++ ;
+
+		(emissor->vche) = (emissor->vche) + (*valor_dado);
+
+	}
+
+}
+
+/* ajusta_beneficiario vai alterar os valores associados ao beneficiario dado, caso ele nao exista cria-o.
+ 
+	recebe ponteiros da referencia do beneficiario e do valor do cheque
+
+*/
+
+ajusta_beneficiario(long int* refbeneficiario, long int* valor_dado) {
+
+	if (/*beneficiario nao existe na estrutura de dados*/) {
+
+		cliente* beneficiario;
+
+		cliente emissor = (cliente*) malloc(sizeof(cliente));
+
+		beneficiario->ref = refbeneficiario;
+
+		beneficiario->nchb = 1;
+
+		beneficiario->vchb = *valor_dado;
+
+	}
+
+	else {
+
+		beneficiario = seek_cliente(refbeneficiario);
+
+		(beneficiario->nchb)++ ;
+
+		(beneficiario->vchb) = (beneficiario->vchb) + (*valor_dado);
+
+	}
+
+}
+
+
+/* comando_processa
+
+	Executado apos receber o comando "processa" no input.
+	Nao recebe nem devolve quaisquer valores.
+	Elimina o cheque mais antigo caso exista
+
+*/
+
+/* cheque_mais_antigo() devolve um ponteiro para o cheque mais antigo, caso nao exista devolve NULL
+   elimina(cheque* cheque_ap) vai eliminar o cheque na estrutura e reorganiza-la devidamente
+   elimina pode tambem ajustar os valores
+*/
+
+void comando_processa(void) {
+
+	if (cheque_mais_antigo() == NULL) {
+
+		printf("Nothing to process");
+
+		return;
+
+	}	
+
+	elimina(cheque_mais_antigo());
+
+	return;
+
+}
+
+/* comando_processaR
+
+	Executado apos receber o comando "processaR" no input.
+	Recebe uma referencia.
+	Elimina o cheque associado a referencia caso exista
+
+*/
+
+/* seek_cheque(int* refc) recebe um ponteiro para inteiro devolvendo o cheque associado ao valor do ponteiro e devolve NULL caso nao exista.
+   elimina(cheque* cheque_ap) elimina o cheque a processar na estrutura de dados fazendo as reorganizacoes necessarias
+*/
+
+void comando_processaR(int* refc) {
+
+	if (seek_cheque(*refc) == NULL) {
+
+		printf("Cheque %d does not exist", *refc);
+
+		return;
+
+	}
+
+	elimina(seek_cheque(*refc));
+
+	return;
+
+}
+
+
+void comando_infocheque(int* refc) {
+
+	cheque* cheque_info = seek_cheque(*refc);
+
+	long int ref_cheque = cheque_info->refc;
+
+	long int val_cheque = novo_cheque->valor;
+
+	long int ref_emi = novo_cheque->refe;
+
+	long int ref_ben = novo_cheque->refb;
+
+	printf("<%ld> <%ld> <%d> --> <%d>\n", ref_cheque, val_cheque, ref_emi, ref_ben);
+
+
+}
